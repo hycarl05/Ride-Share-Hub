@@ -3,20 +3,34 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Prebet UPSI Ride-Hailing API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication
+  - name: users
+    description: User management
+  - name: drivers
+    description: Driver management
+  - name: bookings
+    description: Booking management
+  - name: ratings
+    description: Rating management
+  - name: admin
+    description: Admin operations
+  - name: dashboard
+    description: Dashboard summaries
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +38,596 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # Auth
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user (student)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  # Users
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      summary: List all users (admin)
+      parameters:
+        - name: role
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    patch:
+      operationId: updateUser
+      tags: [users]
+      summary: Update user profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  # Drivers
+  /drivers:
+    get:
+      operationId: listDrivers
+      tags: [drivers]
+      summary: List all drivers
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: isOnline
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of drivers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Driver"
+
+  /drivers/register:
+    post:
+      operationId: registerDriver
+      tags: [drivers]
+      summary: Register as driver
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DriverInput"
+      responses:
+        "201":
+          description: Driver registration submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Driver"
+
+  /drivers/available:
+    get:
+      operationId: listAvailableDrivers
+      tags: [drivers]
+      summary: List online approved drivers available for rides
+      responses:
+        "200":
+          description: Available drivers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Driver"
+
+  /drivers/{id}:
+    get:
+      operationId: getDriver
+      tags: [drivers]
+      summary: Get driver by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Driver"
+    patch:
+      operationId: updateDriver
+      tags: [drivers]
+      summary: Update driver profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DriverUpdate"
+      responses:
+        "200":
+          description: Updated driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Driver"
+
+  /drivers/{id}/toggle-online:
+    patch:
+      operationId: toggleDriverOnline
+      tags: [drivers]
+      summary: Toggle driver online/offline status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToggleOnlineInput"
+      responses:
+        "200":
+          description: Updated driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Driver"
+
+  /drivers/{id}/approve:
+    patch:
+      operationId: approveDriver
+      tags: [drivers]
+      summary: Approve driver (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Approved driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Driver"
+
+  /drivers/{id}/reject:
+    patch:
+      operationId: rejectDriver
+      tags: [drivers]
+      summary: Reject driver (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RejectDriverInput"
+      responses:
+        "200":
+          description: Rejected driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Driver"
+
+  /drivers/{id}/suspend:
+    patch:
+      operationId: suspendDriver
+      tags: [drivers]
+      summary: Suspend driver (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Suspended driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Driver"
+
+  # Bookings
+  /bookings:
+    get:
+      operationId: listBookings
+      tags: [bookings]
+      summary: List bookings (filtered by current user role)
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: driverId
+          in: query
+          schema:
+            type: integer
+        - name: studentId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Bookings list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Booking"
+    post:
+      operationId: createBooking
+      tags: [bookings]
+      summary: Create a new booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingInput"
+      responses:
+        "201":
+          description: Created booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}:
+    get:
+      operationId: getBooking
+      tags: [bookings]
+      summary: Get booking by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}/status:
+    patch:
+      operationId: updateBookingStatus
+      tags: [bookings]
+      summary: Update booking status (driver updates ride progress)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingStatusUpdate"
+      responses:
+        "200":
+          description: Updated booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}/cancel:
+    patch:
+      operationId: cancelBooking
+      tags: [bookings]
+      summary: Cancel booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Cancelled booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}/accept:
+    patch:
+      operationId: acceptBooking
+      tags: [bookings]
+      summary: Driver accepts a booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AcceptBookingInput"
+      responses:
+        "200":
+          description: Accepted booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}/reject:
+    patch:
+      operationId: rejectBooking
+      tags: [bookings]
+      summary: Driver rejects a booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Rejected booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  # Ratings
+  /ratings:
+    post:
+      operationId: submitRating
+      tags: [ratings]
+      summary: Submit a rating for a completed ride
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RatingInput"
+      responses:
+        "201":
+          description: Rating submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rating"
+
+  /ratings/driver/{driverId}:
+    get:
+      operationId: getDriverRatings
+      tags: [ratings]
+      summary: Get ratings for a driver
+      parameters:
+        - name: driverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ratings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Rating"
+
+  # Dashboard / wow endpoints
+  /dashboard/student:
+    get:
+      operationId: getStudentDashboard
+      tags: [dashboard]
+      summary: Student dashboard summary
+      responses:
+        "200":
+          description: Student dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentDashboard"
+
+  /dashboard/driver:
+    get:
+      operationId: getDriverDashboard
+      tags: [dashboard]
+      summary: Driver dashboard with today's stats
+      responses:
+        "200":
+          description: Driver dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DriverDashboard"
+
+  /admin/stats:
+    get:
+      operationId: getAdminStats
+      tags: [admin]
+      summary: Admin overall statistics
+      responses:
+        "200":
+          description: Admin stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminStats"
+
+  /admin/pending-drivers:
+    get:
+      operationId: listPendingDrivers
+      tags: [admin]
+      summary: List drivers with pending verification
+      responses:
+        "200":
+          description: Pending drivers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Driver"
+
+  /fare/estimate:
+    post:
+      operationId: estimateFare
+      tags: [bookings]
+      summary: Estimate fare for a trip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FareEstimateInput"
+      responses:
+        "200":
+          description: Fare estimate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FareEstimate"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +638,356 @@ components:
       required:
         - status
 
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    # Auth
+    RegisterInput:
+      type: object
+      required: [name, email, password, phone]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+        studentId:
+          type: ["string", "null"]
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      required: [user, token]
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+
+    # User
+    User:
+      type: object
+      required: [id, name, email, phone, role, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [student, driver, admin]
+        studentId:
+          type: ["string", "null"]
+        profilePhoto:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        studentId:
+          type: string
+        profilePhoto:
+          type: string
+
+    # Driver
+    Driver:
+      type: object
+      required: [id, userId, icNumber, licenseNumber, vehicleType, vehiclePlate, status, isOnline, rating, totalRides, createdAt]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        studentId:
+          type: ["string", "null"]
+        icNumber:
+          type: string
+        licenseNumber:
+          type: string
+        vehicleType:
+          type: string
+        vehiclePlate:
+          type: string
+        profilePhoto:
+          type: ["string", "null"]
+        vehiclePhoto:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [pending, approved, rejected, suspended]
+        isOnline:
+          type: boolean
+        rating:
+          type: number
+        totalRides:
+          type: integer
+        rejectionReason:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    DriverInput:
+      type: object
+      required: [icNumber, licenseNumber, vehicleType, vehiclePlate]
+      properties:
+        icNumber:
+          type: string
+        licenseNumber:
+          type: string
+        vehicleType:
+          type: string
+        vehiclePlate:
+          type: string
+        profilePhoto:
+          type: string
+        vehiclePhoto:
+          type: string
+
+    DriverUpdate:
+      type: object
+      properties:
+        icNumber:
+          type: string
+        licenseNumber:
+          type: string
+        vehicleType:
+          type: string
+        vehiclePlate:
+          type: string
+        profilePhoto:
+          type: string
+        vehiclePhoto:
+          type: string
+
+    ToggleOnlineInput:
+      type: object
+      required: [isOnline]
+      properties:
+        isOnline:
+          type: boolean
+
+    RejectDriverInput:
+      type: object
+      required: [reason]
+      properties:
+        reason:
+          type: string
+
+    # Booking
+    Booking:
+      type: object
+      required: [id, studentId, status, pickupLocation, destination, fareEstimate, createdAt]
+      properties:
+        id:
+          type: integer
+        studentId:
+          type: integer
+        driverId:
+          type: ["integer", "null"]
+        status:
+          type: string
+          enum: [searching, accepted, arriving, in_progress, completed, cancelled]
+        pickupLocation:
+          type: string
+        destination:
+          type: string
+        notes:
+          type: ["string", "null"]
+        fareEstimate:
+          type: number
+        estimatedArrival:
+          type: ["string", "null"]
+        student:
+          $ref: "#/components/schemas/User"
+        driver:
+          $ref: "#/components/schemas/Driver"
+        rating:
+          $ref: "#/components/schemas/Rating"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    BookingInput:
+      type: object
+      required: [pickupLocation, destination, fareEstimate]
+      properties:
+        pickupLocation:
+          type: string
+        destination:
+          type: string
+        notes:
+          type: string
+        fareEstimate:
+          type: number
+
+    BookingStatusUpdate:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [arriving, in_progress, completed]
+
+    AcceptBookingInput:
+      type: object
+      required: [driverId]
+      properties:
+        driverId:
+          type: integer
+        estimatedArrival:
+          type: string
+
+    # Ratings
+    Rating:
+      type: object
+      required: [id, bookingId, driverId, studentId, rating, createdAt]
+      properties:
+        id:
+          type: integer
+        bookingId:
+          type: integer
+        driverId:
+          type: integer
+        studentId:
+          type: integer
+        rating:
+          type: integer
+        comment:
+          type: ["string", "null"]
+        studentName:
+          type: string
+        createdAt:
+          type: string
+
+    RatingInput:
+      type: object
+      required: [bookingId, driverId, rating]
+      properties:
+        bookingId:
+          type: integer
+        driverId:
+          type: integer
+        rating:
+          type: integer
+        comment:
+          type: string
+
+    # Dashboard
+    StudentDashboard:
+      type: object
+      required: [totalRides, completedRides, cancelledRides, totalSpent, recentBookings, activeBooking]
+      properties:
+        totalRides:
+          type: integer
+        completedRides:
+          type: integer
+        cancelledRides:
+          type: integer
+        totalSpent:
+          type: number
+        activeBooking:
+          $ref: "#/components/schemas/Booking"
+        recentBookings:
+          type: array
+          items:
+            $ref: "#/components/schemas/Booking"
+
+    DriverDashboard:
+      type: object
+      required: [todayEarnings, todayTrips, totalEarnings, totalTrips, rating, pendingRequests, recentTrips]
+      properties:
+        todayEarnings:
+          type: number
+        todayTrips:
+          type: integer
+        totalEarnings:
+          type: number
+        totalTrips:
+          type: integer
+        rating:
+          type: number
+        isOnline:
+          type: boolean
+        pendingRequests:
+          type: array
+          items:
+            $ref: "#/components/schemas/Booking"
+        recentTrips:
+          type: array
+          items:
+            $ref: "#/components/schemas/Booking"
+
+    AdminStats:
+      type: object
+      required: [totalStudents, totalDrivers, activeDrivers, completedTrips, pendingVerifications, totalRevenue, recentBookings]
+      properties:
+        totalStudents:
+          type: integer
+        totalDrivers:
+          type: integer
+        activeDrivers:
+          type: integer
+        completedTrips:
+          type: integer
+        pendingVerifications:
+          type: integer
+        totalRevenue:
+          type: number
+        recentBookings:
+          type: array
+          items:
+            $ref: "#/components/schemas/Booking"
+
+    # Fare
+    FareEstimateInput:
+      type: object
+      required: [pickupLocation, destination]
+      properties:
+        pickupLocation:
+          type: string
+        destination:
+          type: string
+
+    FareEstimate:
+      type: object
+      required: [estimatedFare, estimatedTime, distance]
+      properties:
+        estimatedFare:
+          type: number
+        estimatedTime:
+          type: integer
+        distance:
+          type: number

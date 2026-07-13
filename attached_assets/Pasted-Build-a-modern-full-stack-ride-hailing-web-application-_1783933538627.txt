@@ -1,0 +1,260 @@
+Build a modern full-stack ride-hailing web application prototype called "Prebet UPSI".
+
+Purpose:
+This application is a safer alternative to the current Telegram-based student transport booking system used at Universiti Pendidikan Sultan Idris (UPSI). Instead of booking rides through public group chats, students can request rides securely through the application. Only registered and verified drivers are allowed to accept bookings.
+
+Technology:
+- React + Vite
+- Tailwind CSS
+- Node.js + Express
+- SQLite (or Supabase if easier)
+- Responsive design
+- Clean modern UI inspired by Grab/Uber
+
+There are three user roles:
+1. Student
+2. Driver
+3. Admin
+
+==================================
+STUDENT FEATURES
+==================================
+
+- Login/Register
+- Dashboard
+- Book a ride
+- Enter:
+  - Pickup location
+  - Destination
+  - Notes
+- Fare estimation
+- Ride history
+- Cancel booking
+- View driver profile
+- Driver verification badge
+- Driver vehicle information
+- Live ride status
+
+Ride Status:
+- Searching Driver
+- Driver Accepted
+- Driver Arriving
+- Passenger Picked Up
+- Completed
+- Cancelled
+
+==================================
+DRIVER FEATURES
+==================================
+
+Driver registration includes:
+
+- Full Name
+- Student ID (optional if external driver)
+- IC Number
+- Phone Number
+- Vehicle Type
+- Vehicle Plate Number
+- Driving License Number
+- Profile Photo
+- Vehicle Photo
+
+Driver dashboard:
+
+- Toggle Online/Offline
+- Receive ride requests
+- Accept/Reject ride
+- Update ride status
+- Today's earnings
+- Trip history
+- Driver rating
+
+Only approved drivers can go online.
+
+==================================
+ADMIN FEATURES
+==================================
+
+Admin dashboard should allow:
+
+- View all students
+- View all drivers
+- Approve driver registration
+- Reject driver registration
+- Suspend drivers
+- View all bookings
+- Statistics
+
+Dashboard cards:
+- Total Students
+- Total Drivers
+- Active Drivers
+- Completed Trips
+- Pending Driver Verification
+
+==================================
+SAFETY FEATURES
+==================================
+
+Implement safety-focused features:
+
+✓ Driver verification badge
+
+✓ Driver must be approved before accepting rides
+
+✓ Student can see:
+- Driver photo
+- Driver name
+- Vehicle photo
+- Plate number
+- Driver rating
+
+✓ Emergency SOS button
+
+Pressing SOS opens a modal showing:
+- Emergency Contact
+- Campus Security
+- Police
+- Share current ride information
+
+✓ Ride sharing
+
+Student can share:
+- Driver information
+- Pickup
+- Destination
+- Estimated arrival time
+
+==================================
+BOOKING FLOW
+==================================
+
+Student:
+Book Ride
+↓
+
+Searching Driver
+↓
+
+Nearest online driver receives request
+
+↓
+
+Driver accepts
+
+↓
+
+Ride confirmed
+
+↓
+
+Driver arrives
+
+↓
+
+Ride starts
+
+↓
+
+Ride completed
+
+==================================
+UI DESIGN
+==================================
+
+Use a professional modern design.
+
+Primary color:
+#0F4C81
+
+Secondary:
+#3BAFDA
+
+Background:
+#F8FAFC
+
+Rounded cards
+
+Soft shadows
+
+Modern icons
+
+Smooth animations
+
+Responsive mobile-first layout.
+
+==================================
+PAGES
+==================================
+
+Landing Page
+
+About
+
+Student Login
+
+Driver Login
+
+Register
+
+Student Dashboard
+
+Driver Dashboard
+
+Admin Dashboard
+
+Book Ride
+
+Ride History
+
+Driver Verification
+
+Driver Profile
+
+Settings
+
+==================================
+DATABASE TABLES
+==================================
+
+Students
+
+Drivers
+
+Vehicles
+
+Bookings
+
+RideStatus
+
+Ratings
+
+EmergencyContacts
+
+==================================
+BONUS FEATURES
+==================================
+
+Add these demo features:
+
+- Dummy GPS map placeholder
+- Driver search animation
+- Fake notification popup
+- Driver rating system
+- Estimated arrival time
+- Fare calculator
+- Dark mode toggle
+
+==================================
+IMPORTANT
+==================================
+
+Generate clean, modular, production-style code.
+
+Use reusable React components.
+
+Populate the application with realistic dummy data so the demo works immediately without requiring manual database setup.
+
+Do not require external APIs. Simulate ride matching and live ride status using mock data and timers.
+
+The application should feel like a real Grab/Uber-style campus transportation platform designed specifically for UPSI students.

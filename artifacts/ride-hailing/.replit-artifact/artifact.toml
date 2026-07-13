@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Prebet UPSI"
+version = "1.0.0"
+id = "artifacts/ride-hailing"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19551
+
+[services.development]
+run = "pnpm --filter @workspace/ride-hailing run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ride-hailing", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/ride-hailing/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19551"
+BASE_PATH = "/"
