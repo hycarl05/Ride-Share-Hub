@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ShieldCheck, Clock, CreditCard, UserCircle, Car, Shield, X } from 'lucide-react';
-import { Link, useLocation } from 'wouter';
+import { Link } from 'wouter';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,7 +33,6 @@ function LoginModal({ onClose }: { onClose: () => void }) {
   const loginMutation = useLogin();
   const { login } = useAuth();
   const { toast } = useToast();
-  const [, navigate] = useLocation();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -43,15 +42,9 @@ function LoginModal({ onClose }: { onClose: () => void }) {
   const onSubmit = (data: LoginFormValues) => {
     loginMutation.mutate({ data }, {
       onSuccess: (res) => {
-        login(res.user, res.token);
-        toast({ title: 'Welcome back!' });
         onClose();
-        // Navigate to the right dashboard
-        const dest =
-          res.user.role === 'student' ? '/student/dashboard' :
-          res.user.role === 'driver'  ? '/driver/dashboard'  :
-          '/admin/dashboard';
-        navigate(dest);
+        login(res.user, res.token); // AuthContext.login() handles the redirect
+        toast({ title: 'Welcome back!', description: `Logged in as ${res.user.name}` });
       },
       onError: (err: any) => {
         toast({

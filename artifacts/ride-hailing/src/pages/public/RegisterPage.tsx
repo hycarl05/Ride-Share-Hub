@@ -152,7 +152,7 @@ export default function RegisterPage() {
         </Card>
 
         <p className="text-center mt-6 text-muted-foreground text-sm">
-          Already have an account? <Link href="/login" className="text-primary font-medium hover:underline">Log in</Link>
+          Already have an account? <Link href="/" className="text-primary font-medium hover:underline">Log in</Link>
         </p>
       </div>
     </AnimatedPage>

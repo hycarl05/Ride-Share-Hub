@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
     localStorage.removeItem('prebet_user');
     localStorage.removeItem('prebet_token');
-    setLocation('/login');
+    setLocation('/');
   }, [setLocation]);
 
   const updateUser = useCallback((updatedUser: User) => {

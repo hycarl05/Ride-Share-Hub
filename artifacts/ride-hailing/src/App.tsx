@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { Route, Switch, Router as WouterRouter } from 'wouter';
+import { Route, Switch, Router as WouterRouter, Redirect } from 'wouter';
 import { setAuthTokenGetter } from '@workspace/api-client-react';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -9,7 +9,6 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { AppLayout } from '@/components/AppLayout';
 
 import LandingPage from '@/pages/public/LandingPage';
-import LoginPage from '@/pages/public/LoginPage';
 import RegisterPage from '@/pages/public/RegisterPage';
 
 import StudentDashboard from '@/pages/student/StudentDashboard';
@@ -48,7 +47,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={LandingPage} />
-      <Route path="/login" component={LoginPage} />
+      <Route path="/login"><Redirect to="/" /></Route>
       <Route path="/register" component={RegisterPage} />
       <Route path="/driver/register" component={DriverRegister} />
 

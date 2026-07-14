@@ -6,15 +6,14 @@ export function ProtectedRoute({ children, allowedRoles }: { children: React.Rea
   const { isAuthenticated, role } = useAuth();
 
   if (!isAuthenticated) {
-    return <Redirect to="/login" />;
+    return <Redirect to="/" />;
   }
 
   if (allowedRoles && role && !allowedRoles.includes(role)) {
-    // Redirect to their respective dashboards if they try to access unauthorized routes
     if (role === 'student') return <Redirect to="/student/dashboard" />;
     if (role === 'driver') return <Redirect to="/driver/dashboard" />;
     if (role === 'admin') return <Redirect to="/admin/dashboard" />;
-    return <Redirect to="/login" />;
+    return <Redirect to="/" />;
   }
 
   return <>{children}</>;

@@ -50,7 +50,7 @@ export default function DriverRegister() {
           description: 'Your application is pending admin approval. You will be notified once approved.',
           duration: 5000
         });
-        setLocation('/login');
+        setLocation('/');
       },
       onError: (err: any) => {
         toast({ 
