@@ -81,17 +81,56 @@ export default function LandingPage() {
             Every driver verified. Every ride tracked. UPSI students travel with confidence.
           </p>
           <div className="flex gap-3 justify-center pointer-events-auto">
-            <Link href={isAuthenticated ? getDashboardLink() : '/register'}
-              className="bg-white text-[#07090f] font-bold px-7 py-3 rounded-full
-                text-sm hover:bg-slate-100 transition-colors shadow-lg shadow-black/40">
-              {isAuthenticated ? 'Go to Dashboard' : 'Get Started'}
-            </Link>
-            <Link href="/driver/register"
-              className="border border-white/15 text-white/70 hover:text-white
-                hover:border-white/30 font-semibold px-7 py-3 rounded-full
-                text-sm transition-colors">
-              Apply to Drive
-            </Link>
+            {/* Primary CTA — varies by role */}
+            {role === 'student' ? (
+              <Link href="/student/book"
+                className="bg-white text-[#07090f] font-bold px-7 py-3 rounded-full
+                  text-sm hover:bg-slate-100 transition-colors shadow-lg shadow-black/40">
+                Book a Ride
+              </Link>
+            ) : role === 'driver' ? (
+              <Link href="/driver/dashboard"
+                className="bg-white text-[#07090f] font-bold px-7 py-3 rounded-full
+                  text-sm hover:bg-slate-100 transition-colors shadow-lg shadow-black/40">
+                Driver Dashboard
+              </Link>
+            ) : role === 'admin' ? (
+              <Link href="/admin/dashboard"
+                className="bg-white text-[#07090f] font-bold px-7 py-3 rounded-full
+                  text-sm hover:bg-slate-100 transition-colors shadow-lg shadow-black/40">
+                Admin Dashboard
+              </Link>
+            ) : (
+              <Link href="/register"
+                className="bg-white text-[#07090f] font-bold px-7 py-3 rounded-full
+                  text-sm hover:bg-slate-100 transition-colors shadow-lg shadow-black/40">
+                Register as Student
+              </Link>
+            )}
+
+            {/* Secondary CTA */}
+            {role === 'student' ? (
+              <Link href="/student/rides"
+                className="border border-white/15 text-white/70 hover:text-white
+                  hover:border-white/30 font-semibold px-7 py-3 rounded-full
+                  text-sm transition-colors">
+                My Rides
+              </Link>
+            ) : role === 'driver' || role === 'admin' ? (
+              <Link href={getDashboardLink()}
+                className="border border-white/15 text-white/70 hover:text-white
+                  hover:border-white/30 font-semibold px-7 py-3 rounded-full
+                  text-sm transition-colors">
+                Go to Dashboard
+              </Link>
+            ) : (
+              <Link href="/driver/register"
+                className="border border-white/15 text-white/70 hover:text-white
+                  hover:border-white/30 font-semibold px-7 py-3 rounded-full
+                  text-sm transition-colors">
+                Apply to Drive
+              </Link>
+            )}
           </div>
         </div>
 
