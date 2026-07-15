@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/contexts/AuthContext';
-import { ShieldScene } from '@/components/ShieldScene';
 import { useLogin } from '@workspace/api-client-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -232,73 +231,71 @@ export default function LandingPage() {
       </header>
 
       {/* ── Hero ── */}
-      <section className="relative flex-1 min-h-[85vh] flex flex-col">
-        <div className="absolute inset-0 z-0">
-          <ShieldScene />
+      <section className="flex flex-col items-center justify-center text-center px-6 py-28 sm:py-36">
+        {/* Shield icon */}
+        <div className="mb-8">
+          <svg width="56" height="64" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6l-8-4z"
+              fill="#3BAFDA" fillOpacity="0.12" stroke="#3BAFDA" strokeWidth="1.5" />
+            <path d="M9 12l2 2 4-4" stroke="#3BAFDA" strokeWidth="1.8"
+              strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
-        <div className="absolute top-0 left-0 right-0 h-24
-          bg-gradient-to-b from-[#07090f] to-transparent z-10 pointer-events-none" />
 
-        <div className="relative z-20 flex-1 flex flex-col items-center justify-end
-          text-center px-6 pb-16 pointer-events-none">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full
-            border border-white/10 bg-white/5 text-white/60
-            text-xs font-medium mb-5 tracking-widest uppercase pointer-events-auto">
-            Verified · Secure · On-campus
-          </div>
-          <h1 className="text-5xl sm:text-6xl font-extrabold text-white mb-4 leading-tight">
-            Your safety,<br />
-            <span className="bg-gradient-to-r from-[#3bafda] to-[#5fd4f5] bg-clip-text text-transparent">
-              guaranteed.
-            </span>
-          </h1>
-          <p className="text-slate-400 text-base mb-8 max-w-sm leading-relaxed">
-            Every driver verified. Every ride tracked. UPSI students travel with confidence.
-          </p>
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full
+          border border-white/10 bg-white/5 text-white/50
+          text-xs font-medium mb-6 tracking-widest uppercase">
+          Verified · Secure · On-campus
+        </div>
 
-          <div className="flex gap-3 justify-center pointer-events-auto">
-            {isAuthenticated ? (
-              /* Logged-in CTAs — role-specific */
-              role === 'student' ? (
-                <>
-                  <Link href="/student/book"
-                    className="bg-white text-[#07090f] font-bold px-7 py-3 rounded-full text-sm
-                      hover:bg-slate-100 transition-colors shadow-lg shadow-black/40">
-                    Book a Ride
-                  </Link>
-                  <Link href="/student/rides"
-                    className="border border-white/15 text-white/70 hover:text-white
-                      hover:border-white/30 font-semibold px-7 py-3 rounded-full text-sm transition-colors">
-                    My Rides
-                  </Link>
-                </>
-              ) : (
-                <Link href={getDashboardLink()}
-                  className="bg-white text-[#07090f] font-bold px-7 py-3 rounded-full text-sm
-                    hover:bg-slate-100 transition-colors shadow-lg shadow-black/40">
-                  Go to Dashboard
-                </Link>
-              )
-            ) : (
-              /* Guest CTAs */
+        <h1 className="text-5xl sm:text-6xl font-extrabold text-white mb-5 leading-tight tracking-tight">
+          Your safety,<br />
+          <span className="bg-gradient-to-r from-[#3bafda] to-[#5fd4f5] bg-clip-text text-transparent">
+            guaranteed.
+          </span>
+        </h1>
+
+        <p className="text-slate-400 text-base mb-10 max-w-sm leading-relaxed">
+          Every driver verified. Every ride tracked. UPSI students travel with confidence.
+        </p>
+
+        <div className="flex gap-3 justify-center">
+          {isAuthenticated ? (
+            role === 'student' ? (
               <>
-                <button onClick={() => setShowLogin(true)}
-                  className="bg-white text-[#07090f] font-bold px-7 py-3 rounded-full text-sm
-                    hover:bg-slate-100 transition-colors shadow-lg shadow-black/40">
-                  Log In
-                </button>
-                <Link href="/driver/register"
+                <Link href="/student/book"
+                  className="bg-[#3bafda] hover:bg-[#2d9cc7] text-white font-bold px-7 py-3
+                    rounded-full text-sm transition-colors shadow-lg shadow-[#3bafda]/20">
+                  Book a Ride
+                </Link>
+                <Link href="/student/rides"
                   className="border border-white/15 text-white/70 hover:text-white
                     hover:border-white/30 font-semibold px-7 py-3 rounded-full text-sm transition-colors">
-                  Apply to Drive
+                  My Rides
                 </Link>
               </>
-            )}
-          </div>
+            ) : (
+              <Link href={getDashboardLink()}
+                className="bg-[#3bafda] hover:bg-[#2d9cc7] text-white font-bold px-7 py-3
+                  rounded-full text-sm transition-colors shadow-lg shadow-[#3bafda]/20">
+                Go to Dashboard
+              </Link>
+            )
+          ) : (
+            <>
+              <button onClick={() => setShowLogin(true)}
+                className="bg-[#3bafda] hover:bg-[#2d9cc7] text-white font-bold px-7 py-3
+                  rounded-full text-sm transition-colors shadow-lg shadow-[#3bafda]/20">
+                Log In
+              </button>
+              <Link href="/driver/register"
+                className="border border-white/15 text-white/70 hover:text-white
+                  hover:border-white/30 font-semibold px-7 py-3 rounded-full text-sm transition-colors">
+                Apply to Drive
+              </Link>
+            </>
+          )}
         </div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-32
-          bg-gradient-to-t from-[#0a0f1e] to-transparent z-10 pointer-events-none" />
       </section>
 
       {/* ── Why Prebet UPSI ── */}
